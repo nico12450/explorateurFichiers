@@ -25,8 +25,32 @@ fs.readdir(homedir,{withFileTypes:true}, function (err, files) {
     });
 
     //console.log(listeRepertoire);
+    listeRepertoire = triDossier(listeRepertoire);
 
 });
+
+
+function triDossier(listeFichiers){
+
+    var nListe = [];
+
+    for (var i = listeFichiers.length - 1; i >= 0; i--) {
+        var e = listeFichiers[i];
+        if(e.isDirectory()){
+            nListe.push(e);
+        }
+    }
+
+    for (var i = listeFichiers.length - 1; i >= 0; i--) {
+        var e = listeFichiers[i];
+        if (e.isFile()) {
+            nListe.push(e);
+        }
+    }
+
+    return nListe;
+
+}
 
 
 
@@ -52,12 +76,12 @@ fs.readFile('./Main.html', function (err, html) {
 
         	if (element.isDirectory()) {
 
-        		response.write("$('#listeFichiers').append(\"<div class='col-md-2 col-sm-3 pt-4 pb-4 border' id='fichier'> " + element.name + " </div>\");");
+        		response.write("$('#listeFichiers').append(\"<div class='col-md-2 col-sm-3 pt-4 pb-4 border' id='dossier'> " + "<i class='fas fa-folder-open'></i>" + " " + element.name + " </div>\");");
         	}
 
         	else if(element.isFile()){
         		
-        		response.write("$('#listeFichiers').append(\"<div class='col-md-2 col-sm-3 pt-4 pb-4 border' id='fichier'> " + element.name + " </div>\");");
+        		response.write("$('#listeFichiers').append(\"<div class='col-md-2 col-sm-3 pt-4 pb-4 border' id='fichier'> " + "<i class='fas fa-file'></i>" + " " + element.name + " </div>\");");
         	}
 
         	
