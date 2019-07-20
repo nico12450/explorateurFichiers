@@ -66,6 +66,27 @@ function lireRepertoire(chemin,callback){
 
 }
 
+function retourArriere(chemin){
+
+    var listeDossiers = chemin.split('\\');
+    //console.log(chemin);
+    //console.log(listeDossiers);
+
+    if(listeDossiers.length>1){
+
+        listeDossiers.pop();
+
+    }
+
+    var nouveauChemin = listeDossiers.join('\\');
+    //console.log(nouveauChemin);
+
+    if(nouveauChemin == ''){nouveauChemin='\\'}
+
+    return nouveauChemin;
+
+}
+
 
 
 var http = require('http');
@@ -110,13 +131,15 @@ http.createServer(function(request, response) {
         
         if(adresse == '/'){adresseFichier=adresse;}
 
+        if(adresse == '/&retourArriere'){adresseFichier=retourArriere(adresseFichier);}
+
         lireRepertoire(adresseFichier, function(listeRepertoire){
 
             //console.log(listeRepertoire);
-
             //console.log(adresseFichier);
-
             //console.log(listeRepertoire);
+
+            retourArriere(adresseFichier);
 
             response.writeHeader(200, {"Content-Type": "text/html"});
             response.write(fichierHTML);
@@ -142,6 +165,7 @@ http.createServer(function(request, response) {
 
             response.write("$('#home').attr('onclick','window.location = `/`');");
             response.write("$('#adresse').text('C:" + adresseFichier.replace(/\\/g,'/') + "');");
+            response.write("$('#retourArriere').attr('onclick','window.location = `&retourArriere`');");
 
             response.write("</script></html>");
             response.end(); 
