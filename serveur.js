@@ -141,10 +141,10 @@ http.createServer(function(request, response) {
 
             var donnees = "<div class=\'alert alert-danger\' role=\'alert\'>impossible de lire ce type de fichier</div>";
 
-            if(path.extname == '.txt'){
+            if(path.extname(adresse) == '.txt'){
 
                 donnees = fs.readFileSync(adresse, 'utf8');
-                //donnees = donnees.trim().replace(/\'/g,'&sq').replace(/\"/g,'&dq').replace(/\#/g,'&diese').replace(/[\n\r]/g, '<br>');
+                donnees = donnees.trim().replace(/\'/g,'&sq').replace(/\"/g,'&dq').replace(/\#/g,'&diese').replace(/[\n\r]/g, '<br>');
 
 
             }
