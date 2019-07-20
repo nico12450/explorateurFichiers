@@ -15,30 +15,6 @@ var adresseFichier = homedir;
 
 //lireRepertoire(adresseFichier);
 
-/*
-
-fs.readdir(adresseFichier,{withFileTypes:true}, function (err, files) {
-
-    //handling error
-    if (err) {
-        return console.log('Unable to scan directory: ' + err);
-    } 
-    //listing all files using forEach
-    files.forEach(function (file) {
-        // Do whatever you want to do with the file
-        //console.log(file);
-        listeRepertoire.push(file);
-
-    });
-
-    //console.log(listeRepertoire);
-    listeRepertoire = triDossier(listeRepertoire);
-
-});
-
-*/
-
-
 function triDossier(listeFichiers){
 
     var nListe = [];
@@ -123,8 +99,15 @@ http.createServer(function(request, response) {
 
     else{
 
-        adresseFichier = path.join(adresseFichier,adresse);
+        var nouvelleAdresse = path.join(adresseFichier,adresse);
 
+        if(fs.existsSync(nouvelleAdresse)){
+
+            adresseFichier = nouvelleAdresse;
+
+        }
+
+        
         if(adresse == '/'){adresseFichier=adresse;}
 
         lireRepertoire(adresseFichier, function(listeRepertoire){
