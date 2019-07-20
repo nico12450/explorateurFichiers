@@ -153,6 +153,10 @@ http.createServer(function(request, response) {
 
             }
 
+            else{
+                require('child_process').exec('start "" C:'+ retourArriere(adresse));
+            }
+
             response.writeHeader(200, {"Content-Type": "text/html"});
             response.write(fichierHTML);
 
