@@ -133,44 +133,75 @@ http.createServer(function(request, response) {
 
         if(adresse == '/&retourArriere'){adresseFichier=retourArriere(adresseFichier);}
 
-        lireRepertoire(adresseFichier, function(listeRepertoire){
+        if (adresse.substring(0,3) == '/&&') {
 
-            //console.log(listeRepertoire);
-            //console.log(adresseFichier);
-            //console.log(listeRepertoire);
+            adresse = adresse.substring(3);
+            adresse = path.normalize(adresse);
+            //console.log(adresse);
 
-            retourArriere(adresseFichier);
+            var donnees = "<div class=\'alert alert-danger\' role=\'alert\'>impossible de lire ce type de fichier</div>";
+
+            if(path.extname == '.txt'){
+
+                donnees = fs.readFileSync(adresse, 'utf8');
+                //donnees = donnees.trim().replace(/\'/g,'&sq').replace(/\"/g,'&dq').replace(/\#/g,'&diese').replace(/[\n\r]/g, '<br>');
+
+
+            }
 
             response.writeHeader(200, {"Content-Type": "text/html"});
             response.write(fichierHTML);
 
-
-            for(var i = 0; i<listeRepertoire.length; i++){
-
-                var element = listeRepertoire[i];
-
-                if (element.isDirectory()) {
-
-                    response.write("$('#listeFichiers').append(\"<div class='col-md-2 col-sm-3 pt-4 pb-4 border hoverable' id='dossier' onclick='window.location=`" + element.name + "`'> " + "<i class='fas fa-folder-open'></i>" + " " + element.name + " </div>\");");
-                }
-
-                else if(element.isFile()){
-                    
-                    response.write("$('#listeFichiers').append(\"<div class='col-md-2 col-sm-3 pt-4 pb-4 border' id='fichier'> " + "<i class='fas fa-file'></i>" + " " + element.name + " </div>\");");
-                }
-
-                
-
-            }
-
             response.write("$('#home').attr('onclick','window.location = `/`');");
             response.write("$('#adresse').text('C:" + adresseFichier.replace(/\\/g,'/') + "');");
             response.write("$('#retourArriere').attr('onclick','window.location = `&retourArriere`');");
+            response.write("$('#listeFichiers').append(\"" + donnees + "\");");
 
             response.write("</script></html>");
             response.end(); 
 
-        });
+        }
+
+        else{
+
+            lireRepertoire(adresseFichier, function(listeRepertoire){
+
+                //console.log(listeRepertoire);
+                //console.log(adresseFichier);
+                //console.log(listeRepertoire);
+
+                response.writeHeader(200, {"Content-Type": "text/html"});
+                response.write(fichierHTML);
+
+
+                for(var i = 0; i<listeRepertoire.length; i++){
+
+                    var element = listeRepertoire[i];
+
+                    if (element.isDirectory()) {
+
+                        response.write("$('#listeFichiers').append(\"<div class='col-md-2 col-sm-3 pt-4 pb-4 border hoverable' id='dossier' onclick='window.location=`" + element.name + "`'> " + "<i class='fas fa-folder-open'></i>" + " " + element.name + " </div>\");");
+                    }
+
+                    else if(element.isFile()){
+                        
+                        response.write("$('#listeFichiers').append(\"<div class='col-md-2 col-sm-3 pt-4 pb-4 border' id='fichier' onclick='window.location=`&&" + adresseFichier.replace(/\\/g,'/') + '/' + element.name + "`'> " + "<i class='fas fa-file'></i>" + " " + element.name + " </div>\");");
+                    }
+
+                    
+
+                }
+
+                response.write("$('#home').attr('onclick','window.location = `/`');");
+                response.write("$('#adresse').text('C:" + adresseFichier.replace(/\\/g,'/') + "');");
+                response.write("$('#retourArriere').attr('onclick','window.location = `&retourArriere`');");
+
+                response.write("</script></html>");
+                response.end(); 
+
+            });
+
+        }
 
     }
 
