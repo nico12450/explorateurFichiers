@@ -141,7 +141,7 @@ http.createServer(function(request, response) {
             }
 
             response.write("$('#home').attr('onclick','window.location = `/`');");
-            response.write("$('#adresse').text('C:/" + adresseFichier + "');");
+            response.write("$('#adresse').text('C:" + adresseFichier.replace(/\\/g,'/') + "');");
 
             response.write("</script></html>");
             response.end(); 
