@@ -122,16 +122,20 @@ http.createServer(function(request, response) {
 
         var nouvelleAdresse = path.join(adresseFichier,adresse);
 
+
         if(fs.existsSync(nouvelleAdresse)){
 
             adresseFichier = nouvelleAdresse;
 
         }
 
-        
+        //console.log(adresse);
+  
         if(adresse == '/'){adresseFichier=adresse;}
 
         if(adresse == '/&retourArriere'){adresseFichier=retourArriere(adresseFichier);}
+
+        if (adresse == '/&&//&retourArriere') {adresse = '';}
 
         if (adresse.substring(0,3) == '/&&') {
 
@@ -154,7 +158,7 @@ http.createServer(function(request, response) {
 
             response.write("$('#home').attr('onclick','window.location = `/`');");
             response.write("$('#adresse').text('C:" + adresseFichier.replace(/\\/g,'/') + "');");
-            response.write("$('#retourArriere').attr('onclick','window.location = `&retourArriere`');");
+            response.write("$('#retourArriere').attr('onclick','window.location = document.referrer');");
             response.write("$('#listeFichiers').append(\"" + donnees + "\");");
 
             response.write("</script></html>");
