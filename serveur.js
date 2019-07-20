@@ -115,46 +115,56 @@ http.createServer(function(request, response) {
 
     var adresse = request.url;
 
-    console.log(adresse);
+    //console.log(adresse);
 
-    //if(adresse == "/favicon.ico"){adresse = "/";}
+    if(adresse == "/favicon.ico"){
 
-    adresseFichier = path.join(adresseFichier,adresse);
+    }
 
-    lireRepertoire(adresseFichier, function(listeRepertoire){
+    else{
 
-        //console.log(listeRepertoire);
+        adresseFichier = path.join(adresseFichier,adresse);
 
-        //console.log(adresseFichier);
+        if(adresse == '/'){adresseFichier=adresse;}
 
-        //console.log(listeRepertoire);
+        lireRepertoire(adresseFichier, function(listeRepertoire){
 
-        response.writeHeader(200, {"Content-Type": "text/html"});
-        response.write(fichierHTML);
+            //console.log(listeRepertoire);
+
+            //console.log(adresseFichier);
+
+            //console.log(listeRepertoire);
+
+            response.writeHeader(200, {"Content-Type": "text/html"});
+            response.write(fichierHTML);
 
 
-        for(var i = 0; i<listeRepertoire.length; i++){
+            for(var i = 0; i<listeRepertoire.length; i++){
 
-            var element = listeRepertoire[i];
+                var element = listeRepertoire[i];
 
-            if (element.isDirectory()) {
+                if (element.isDirectory()) {
 
-                response.write("$('#listeFichiers').append(\"<div class='col-md-2 col-sm-3 pt-4 pb-4 border hoverable' id='dossier' onclick='window.location=`" + adresse + "`'> " + "<i class='fas fa-folder-open'></i>" + " " + element.name + " </div>\");");
-            }
+                    response.write("$('#listeFichiers').append(\"<div class='col-md-2 col-sm-3 pt-4 pb-4 border hoverable' id='dossier' onclick='window.location=`" + element.name + "`'> " + "<i class='fas fa-folder-open'></i>" + " " + element.name + " </div>\");");
+                }
 
-            else if(element.isFile()){
+                else if(element.isFile()){
+                    
+                    response.write("$('#listeFichiers').append(\"<div class='col-md-2 col-sm-3 pt-4 pb-4 border' id='fichier'> " + "<i class='fas fa-file'></i>" + " " + element.name + " </div>\");");
+                }
+
                 
-                response.write("$('#listeFichiers').append(\"<div class='col-md-2 col-sm-3 pt-4 pb-4 border' id='fichier'> " + "<i class='fas fa-file'></i>" + " " + element.name + " </div>\");");
+
             }
 
-            
+            response.write("$('#home').attr('onclick','window.location = `/`');");
+            response.write("$('#adresse').text('C:/" + adresseFichier + "');");
 
-        }
+            response.write("</script></html>");
+            response.end(); 
 
+        });
 
-        response.write("</script></html>");
-        response.end(); 
-
-    });
+    }
 
 }).listen(PORT);
